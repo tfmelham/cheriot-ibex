@@ -1,0 +1,16 @@
+radix opcode
+size 32
+base b
+begin
+MUL    0000001xxxxxxxxxx000xxxxx0110011
+MULH   0000001xxxxxxxxxx001xxxxx0110011
+MULHSH 0000001xxxxxxxxxx010xxxxx0110011
+MULHU  0000001xxxxxxxxxx011xxxxx0110011
+end
+
+use radix opcode 
+begin 
+signal ibex_top_i.u_ibex_core.instr_rdata_id
+signal ibex_top_i.u_ibex_core.if_stage_i.instr_rdata_id_o
+signal ibex_top_i.u_ibex_core.if_stage_i.if_instr_rdata
+end
