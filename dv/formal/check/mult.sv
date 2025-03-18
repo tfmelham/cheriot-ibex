@@ -39,8 +39,8 @@ Mult_ALBL_signs: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MUL
 logic [63:0] albhspec; 
 assign albhspec = $unsigned({16'b0, `MULT.op_a_i[15:0]}) * $unsigned(`MULT.op_b_i[31:0]);
 
-// Do we need to show that the intermediate value from thr first stage comes back?
-Mult_ALBH_imd_val_q_i: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |-> `MULT.imd_val_q_i[0] == $past(`MULT.mac_res_d)); 
+// Do we need to show that the intermediate value from the first stage comes back?
+Mult_ALBH_imd_val_q_i: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |-> `MULT.imd_val_q_i[0] == $past(`MULT.mac_res_d));  // slow
 
 // This does not converge.
 Mult_ALBH: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL 
