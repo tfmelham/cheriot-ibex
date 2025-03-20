@@ -9,7 +9,7 @@ set_proofgrid_max_local_jobs 15
 set_word_level_engine_flow on
 set_engineWL_processes 15
 
-set_proof_simplification off
+stop
 
 prove -property multiplier.Mult_ALBL -engine WHp
 prove -property multiplier.Mult_ALBH -engine WHp
