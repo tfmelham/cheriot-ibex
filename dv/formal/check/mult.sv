@@ -21,7 +21,7 @@ Mult_ALBH_AHBL: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULT
 
 // Inputs are stable during the multiplication
 Mult_mult_en_i_stable: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |=> $stable(`MULT.mult_en_i)[*2]);
-Mult_mult_en_i_past: assert property  (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |-> $past(`MULT.mult_en_i));
+Mult_mult_en_i_past: assert property  (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |-> $past(`MULT.mult_en_i));
 Mult_mult_operator_i_stable: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |=> $stable(`MULT.operator_i)[*2]);
 Mult_op_a_stable: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |=> $stable(`MULT.op_a_i)[*2]); // slow
 Mult_op_b_stable: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |=> $stable(`MULT.op_b_i)[*2]); // slow
@@ -59,8 +59,9 @@ Mult_ALBH_imd_val_q_result_extra: assert property (`MULT.operator_i == MD_OP_MUL
                                 `MULT.imd_val_q_i[0][31:0] == $past(`MULT.op_a_i[15:0]) * $past(`MULT.op_b_i[15:0]));
 
 // This does not converge.
-Mult_ALBH: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL 
-                                ##1 
-                                `MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH 
+Mult_ALBH: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
+                             ##1 
+                            `MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBH) && (`MULT.signed_mode_i == 2'b00) && 
+                              (`MULT.op_a_i == $past(`MULT.op_a_i)) && (`MULT.op_b_i == $past(`MULT.op_b_i)) && (`MULT.imd_val_q_i[0] == $past(`MULT.mac_res_d))
                                 |-> 
                                 `MULT.mac_res_d[31:0] == $past(albhspec[31:0]));
