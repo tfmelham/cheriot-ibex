@@ -29,9 +29,9 @@ prove -property top.Mult_ALBH_imd_val_q_i
 
 prove -with_proven -property top.Mult_ALBH_imd_val_q_result_extra -engine WHp
 
-stop
-
 set_engine_mode {WHp WHt WI WAM K C I N}
 
-prove -with_proven -property top.Mult_ALBH
+prove -property top.Mult_ALBH
 
+set_engine_mode auto
+prove -with_proven -property top.Mult_ALBH_top 
