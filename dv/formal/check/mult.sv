@@ -50,7 +50,8 @@ assign alblspec2 = $past(`MULT.op_a_i[15:0] * `MULT.op_b_i[15:0]);
 // Do we need to show that the intermediate value from the first stage comes back?
 Mult_ALBH_imd_val_q_i: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |-> `MULT.imd_val_q_i[0] == $past(`MULT.mac_res_d));  // slow
 
-Mult_ALBH_imd_val_q_result: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |-> `MULT.imd_val_q_i[0][31:0] == $past(`MULT.op_a_i[15:0]) * $past(`MULT.op_b_i[15:0]));
+// Does not converge.
+// Mult_ALBH_imd_val_q_result: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |-> `MULT.imd_val_q_i[0][31:0] == $past(`MULT.op_a_i[15:0]) * $past(`MULT.op_b_i[15:0]));
 
 Mult_ALBH_imd_val_q_result_extra: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL 
                                 ##1 
@@ -58,10 +59,14 @@ Mult_ALBH_imd_val_q_result_extra: assert property (`MULT.operator_i == MD_OP_MUL
                                 |-> 
                                 `MULT.imd_val_q_i[0][31:0] == $past(`MULT.op_a_i[15:0]) * $past(`MULT.op_b_i[15:0]));
 
-// This does not converge.
+// This does converge.
 Mult_ALBH: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
                              ##1 
                             `MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBH) && (`MULT.signed_mode_i == 2'b00) && 
                               (`MULT.op_a_i == $past(`MULT.op_a_i)) && (`MULT.op_b_i == $past(`MULT.op_b_i)) && (`MULT.imd_val_q_i[0] == $past(`MULT.mac_res_d))
                                 |-> 
+                                `MULT.mac_res_d[31:0] == $past(albhspec[31:0]));
+
+Mult_ALBH_top: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
+                                |=> 
                                 `MULT.mac_res_d[31:0] == $past(albhspec[31:0]));
