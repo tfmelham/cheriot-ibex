@@ -16,7 +16,7 @@
 // State machine forward progress: ALBL -> ALBH -> AHBL
 Mult_idle_ALBL: assert property (~`MULT.mult_en_i |-> `MULTG.mult_state_q == `MULTG.ALBL);
 Mult_ALBL_ALBH: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |=> `MULTG.mult_state_q == `MULTG.ALBH);
-Mult_ALBH_AHBH: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |=> `MULTG.mult_state_q == `MULTG.AHBH);
+Mult_ALBH_AHBL: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |=> `MULTG.mult_state_q == `MULTG.AHBL);
 
 // Mult_ALBH_AHBL: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |=> `MULTG.mult_state_q == `MULTG.AHBL);
 // Mult_ALBH_ALBL: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |-> $past(`MULTG.mult_state_q) == `MULTG.ALBL);
@@ -50,7 +50,7 @@ Mult_ALBL_signs: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MUL
 // ---------------------------------------------------------------------
 
 // Simple specification 
-logic [63:0] ahbhspec; 
+logic [63:0] albhspec; 
 assign albhspec = $unsigned({16'b0, `MULT.op_a_i[15:0]}) * $unsigned(`MULT.op_b_i[31:0]);
 
 // ALBH property with helper constraints in the entecedent
@@ -70,13 +70,13 @@ Mult_ALBH: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i &&
 // ---------------------------------------------------------------------
 // Third stage, calculation of (AH*BH)<<32 + (AL*BH)<<16 + (AH*BL)<<16
 //
-// The result mac_res_d[31:0] = {((AL*BH) + (AL*BL)[31:16])[15:0], (AL*BL)[15:0])}.
-// This should equal (AL*{BH,BL})[31:0]
+// The result mac_res_d[31:0] = {((AL*BH) + (AL*BL)[31:16] + (AH*BL)[31:16])[15:0], (AL*BL)[15:0])}.
+// This should equal ({AH,AL}*{BH,BL})[31:0]
 // ---------------------------------------------------------------------
 
 // Simple specification 
-logic [63:0] albhspec; 
-assign ahblspec = $unsigned({16'b0, `MULT.op_a_i[15:0]}) * $unsigned(`MULT.op_b_i[31:0]);
+logic [63:0] ahblspec; 
+assign ahblspec = $unsigned(`MULT.op_a_i[31:0]) * $unsigned(`MULT.op_b_i[31:0]);
 
 // AHBL property with helper constraints in the entecedent
 Mult_AHBL_helper: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
