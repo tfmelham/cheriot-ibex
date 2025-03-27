@@ -3,25 +3,24 @@ source verify.tcl
 
 set_engine_mode auto
 
-stop
+# prove -property top.Mult_idle_ALBL
+# prove -property top.Mult_ALBL_ALBH
+# prove -property top.Mult_ALBH_AHBL
 
-prove -property top.Mult_idle_ALBL
-prove -property top.Mult_ALBL_ALBH
-prove -property top.Mult_ALBH_AHBL
+# prove -property top.Mult_mult_en_i_stable
+# prove -property top.Mult_mult_operator_i_stable
+# prove -property top.Mult_op_a_stable ;# slow
+# prove -property top.Mult_op_b_stable ;# slow
 
-prove -property top.Mult_mult_en_i_stable
-prove -property top.Mult_mult_operator_i_stable
-prove -property top.Mult_op_a_stable ;# slow
-prove -property top.Mult_op_b_stable ;# slow
+# prove -property top.Mult_MULL_signed_mode_i
 
-prove -property top.Mult_MULL_signed_mode_i
+# prove -property top.Mult_ALBH_imd_val_q_i ;# slow
+# prove -property top.Mult_AHBL_imd_val_q_i ;# slow
 
 # First cycle properties - WHp just gets them
-prove -property top.Mult_ALBL -engine WHp
-prove -property top.Mult_ALBL_signs -engine WHp
+# prove -property top.Mult_ALBL -engine WHp
+# prove -property top.Mult_ALBL_signs -engine WHp
 
-prove -property top.Mult_ALBH_imd_val_q_i ;# slow
-prove -property top.Mult_AHBL_imd_val_q_i ;# slow
 
 set_prove_orchestration off
 set_proofmaster off
@@ -34,25 +33,32 @@ set_engineWL_processes 16
 # ** 
 # prove -with_proven -property top.Mult_ALBH_helper -engine {WHps WA1}
 
-stop
-
-# Converting the properties to assumptions makes the helper converge, fairly quickly
-assume -from_assert top.Mult_idle_ALBL top.Mult_ALBL_ALBH -remove_original
-assume -from_assert top.Mult_*_stable -remove_original
-assume -from_assert top.Mult_MULL_signed_mode_i -remove_original
+# Converting the cycle 1 correctness properties to assumptions makes the helper converge, fairly quickly
 assume -from_assert top.Mult_ALBL top.Mult_ALBL_signs -remove_original
-assume -from_assert top.Mult_ALBH_imd_val_q_i -remove_original
 prove -property top.Mult_ALBH_helper -engine {WHps WA1}
 
 # This proof of ALBH does not converge, when the lemmas as well as the helper are already proved
 # This proof of ALBH also does not converge even when the lemmas are assumed.
-prove -with_proven -property top.Mult_ALBH -engine {WHps WA1}
+# prove -with_proven -property top.Mult_ALBH -engine {WHps WA1}
 
-# Converting the helper to an assumpton makes ALBH converge, and quickly
+# Converting the helper and lemmas to assumptons makes ALBH converge, and quickly
+# The auto engine mode works just fine for this.
+assume -from_assert top.Mult_idle_ALBL top.Mult_ALBL_ALBH -remove_original
+assume -from_assert top.Mult_*_stable -remove_original
+assume -from_assert top.Mult_MULL_signed_mode_i -remove_original
+assume -from_assert top.Mult_ALBH_imd_val_q_i -remove_original
 assume -from_assert top.Mult_ALBH_helper -remove_original
-prove -property top.Mult_ALBH -engine {WHps WA1}
+prove -property top.Mult_ALBH -engine auto
+
+prove -property top.Mult_ALBH_signs -engine WHp
 
 # Proving the helper property for the third cycle.
-assume -from_assert top.Mult_ALBL top.Mult_ALBL_signs -remove_original
+assume -from_assert top.Mult_ALBH top.Mult_ALBH_signs -remove_original
 prove -property top.Mult_AHBL_helper -engine {WHps WA1}
 
+stop
+
+assume -from_assert top.Mult_ALBH_AHBL -remove_original
+assume -from_assert top.Mult_AHBL_imd_val_q_i -remove_original
+assume -from_assert top.Mult_AHBL_helper -remove_original
+prove -property top.Mult_AHBL -engine {WHps WA1}
