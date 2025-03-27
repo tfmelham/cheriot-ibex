@@ -50,8 +50,8 @@ Mult_ALBL_signs: assert property (`MULT.mult_en_i && `MULTG.mult_state_q == `MUL
 // ---------------------------------------------------------------------
 
 // Simple specification 
-logic [63:0] albhspec; 
-assign albhspec = $unsigned({16'b0, `MULT.op_a_i[15:0]}) * $unsigned(`MULT.op_b_i[31:0]);
+logic [63:0] alxbspec; 
+assign alxbspec = $unsigned({16'b0, `MULT.op_a_i[15:0]}) * $unsigned(`MULT.op_b_i[31:0]);
 
 // ALBH property with helper constraints in the entecedent
 Mult_ALBH_helper: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
@@ -61,11 +61,14 @@ Mult_ALBH_helper: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_
                                    `MULT.signed_mode_i == 2'b00 && 
                                    `MULT.imd_val_q_i[0] == $past(`MULT.mac_res_d)
                                    |-> 
-                                   `MULT.mac_res_d[31:0] == $past(albhspec[31:0]));
+                                   `MULT.mac_res_d[31:0] == $past(alxbspec[31:0]));
 
 Mult_ALBH: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
                                 |=> 
-                                `MULT.mac_res_d[31:0] == $past(albhspec[31:0]));
+                                `MULT.mac_res_d[31:0] == $past(alxbspec[31:0]));
+
+
+Mult_ALBH_signs: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |-> `MULT.mac_res_d[33:32] == 2'b00);
 
 // ---------------------------------------------------------------------
 // Third stage, calculation of (AH*BH)<<32 + (AL*BH)<<16 + (AH*BL)<<16
@@ -75,8 +78,11 @@ Mult_ALBH: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i &&
 // ---------------------------------------------------------------------
 
 // Simple specification 
-logic [63:0] ahblspec; 
-assign ahblspec = $unsigned(`MULT.op_a_i[31:0]) * $unsigned(`MULT.op_b_i[31:0]);
+logic [63:0] ahxbspec; 
+assign ahxbspec = $unsigned(`MULT.op_a_i[31:16]) * $unsigned(`MULT.op_b_i[31:0]);
+
+logic [63:0] axbspec;
+assign axbspec = $unsigned(`MULT.op_a_i[31:0]) * $unsigned(`MULT.op_b_i[31:0]);
 
 // AHBL property with helper constraints in the entecedent
 Mult_AHBL_helper: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
@@ -87,8 +93,15 @@ Mult_AHBL_helper: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_
                                    `MULT.imd_val_q_i[0] == $past(`MULT.mac_res_d)
                                     ##1
                                    `MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.AHBL) && 
-                                   `MULT.op_a_i == $past(`MULT.op_a_i) && `MULT.op_b_i == $past(`MULT.op_b_i) && 
+                                   `MULT.op_a_i == $past(`MULT.op_a_i,2) && `MULT.op_b_i == $past(`MULT.op_b_i,2) && 
                                    `MULT.signed_mode_i == 2'b00 && 
                                    `MULT.imd_val_q_i[0] == $past(`MULT.mac_res_d)
                                    |-> 
-                                   `MULT.mac_res_d[31:0] == $past(albhspec[31:0]));
+                                  `MULT.mac_res_d[31:0] == $past(alxbspec[31:0]) + {$past(ahxbspec[15:0]),16'b0});
+   //                                  `MULT.mac_res_d[31:0] == $past(axbspec[31:0],2));
+
+Mult_AHBL: assert property (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
+                             |=> ##1
+ //                                  `MULT.mac_res_d[31:0] == $past(alxbspec[31:0]) + {$past(ahxbspec[15:0]),16'b0});
+                                     `MULT.mac_res_d[31:0] == $past(axbspec[31:0],2));
+
