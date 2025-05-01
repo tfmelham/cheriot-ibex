@@ -504,6 +504,8 @@ ibex_compressed_decoder decompression_assertion_decoder_2(
 `include "peek/follower.sv" // Pipeline follower
 `include "spec_instance.sv" // Instantiate the specification
 
+`include "peek/mult.sv" // multiplier intermediate results specs
+
 ////////////////////// Proof helpers ///////////////////////
 `include "peek/compare_helper.sv"
 
@@ -511,8 +513,5 @@ ibex_compressed_decoder decompression_assertion_decoder_2(
 `undef INSTR
 `define INSTR wbexc_decompressed_instr
 `include "../build/psgen.sv"
-
-/////////////// Multiplier verification ///////////
-`include "mult.sv"
 
 endmodule
