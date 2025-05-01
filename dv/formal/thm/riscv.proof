@@ -50,6 +50,7 @@ def structure_fast_cheri
 
 lemma riscv
   Ibex: lemma ibex
+  Mult: lemma mult
 
   /
 

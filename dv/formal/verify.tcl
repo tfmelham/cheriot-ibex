@@ -37,8 +37,10 @@ elaborate -top top -disable_auto_bbox
 clock clk_i
 reset ~rst_ni
 
-set_proofgrid_max_local_jobs 10
+set_proofgrid_max_jobs 21 					;# Set for word-level engines
+set_proofgrid_max_local_jobs 21				;# Was 10, but 21 needed for word-level engines
 set_proofgrid_per_engine_max_local_jobs 8
+set_engineWL_processes 21					;# For the Mtype proofs, where we use the word-level engines
 
 # AMcustom1
 custom_engine -add -code hT3N1rhP11/52HrFRS21ROp2LOjVTgPvT8L8BGXHgLhaIuqtT4nARFjUqrBL+7pLmaTOzBepZW/Jm8SSrHDybSQtoNiO3y43wk+dEoWlsZizu97Fih6O6lPVG/LpWP5SsUPwlGagLNa1FKEFvwVXyX7//8prySbvSxIHXr5er+z4RAEA
@@ -78,7 +80,15 @@ proc prove_hps {task regex} {
 proc prove_no_liveness {} {
 	assume_mtypes
 
+	set_word_level_engine_flow on
+	prove -property {Step0::top.Mult_ALBL} -engine {WHps WA1}
+	prove -property {Step1::top.Mult_ALBH_helper} -engine {WHPs WA1}
+	prove -property {Step3::top.Mult_AHBL_helper} -engine {WHPs WA1} 
+	set_word_level_engine_flow off
+	
 	prove -task Step0
+
+	# Old from here - step numbers out of whack
 	prove -bg -task Step1
 	prove -bg -task Step2
 	prove -wait

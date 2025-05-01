@@ -1,0 +1,78 @@
+# Copyright lowRISC contributors.
+# Licensed under the Apache License, Version 2.0 (see LICENSE for details).
+# Original Author: Tom Melham
+# SPDX-License-Identifier: Apache-2.0
+
+# These properties constitute a block-level verification of the multplier/divider unit, used in subsequent verification of
+# the Mtype Ibex instructions.
+
+# Block-level properties of the multiplier
+lemma mult
+
+  # Basic facts about the multipler state machine.
+  Idle: have (~`MULT.mult_en_i |-> `MULTG.mult_state_q == `MULTG.ALBL)
+  ALBL_ALBH: have (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |=> `MULTG.mult_state_q == `MULTG.ALBH)
+  ALBH_AHBL: have (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |=> `MULTG.mult_state_q == `MULTG.AHBL)
+  
+  # Stability of inputs when the multiplier is enabled during the first three cycles
+  mult_en_i_stable: have (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |=> $stable(`MULT.mult_en_i)[*2])
+  mult_operator_i_stable: have (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |=> $stable(`MULT.operator_i)[*2])
+  op_a_i_stable: have (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |=> $stable(`MULT.op_a_i)[*2])
+  op_b_i_stable: have (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |=> $stable(`MULT.op_b_i)[*2])
+
+  # Certain inputs are constant when doing an MD_OP_MULL operation
+  MULL_signed_mode_i: have (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i |-> `MULT.signed_mode_i == 2'b00)
+  MULL_div_sel_i: have (`MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i |-> `MULT.div_sel_i == 1'b0)
+
+  # The multiplier writes intermediate values out to intermediate value registers for multicycle ops at the core level
+  # We need to know they come back for the next step
+  ALBH_imd_val_q_i: have (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBH |-> `MULT.imd_val_q_i[0] == $past(`MULT.imd_val_d_o[0]))
+  AHBL_imd_val_q_i: have (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.AHBL |-> `MULT.imd_val_q_i[0] == $past(`MULT.imd_val_d_o[0]))
+  AHBH_imd_val_q_i: have (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.AHBH |-> `MULT.imd_val_q_i[0] == $past(`MULT.imd_val_d_o[0]))
+
+  # Properties about the multiplication calculation for the MUL instruction.
+  block
+    ALBL: have (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |-> `MULT.imd_val_d_o[0][31:0] == alxblspec[31:0])
+    ALBL_ext: have (`MULT.mult_en_i && `MULTG.mult_state_q == `MULTG.ALBL |-> `MULT.imd_val_d_o[0][33:32] == 2'b00)
+    /
+    ALBH_helper: have (
+      `MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
+      ##1 
+      `MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBH) && 
+      `MULT.op_a_i == $past(`MULT.op_a_i) && `MULT.op_b_i == $past(`MULT.op_b_i) && 
+      `MULT.signed_mode_i == 2'b00 && 
+      `MULT.div_sel_i == 1'b0 &&
+      `MULT.imd_val_q_i[0] == $past(`MULT.imd_val_d_o[0])
+      |-> 
+      `MULT.mac_res_d[31:0] == $past(alxbspec[31:0])
+    )
+    /
+    ALBH: have (
+      `MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
+      |=> 
+      `MULT.mac_res_d[31:0] == $past(alxbspec[31:0])
+    )
+    /
+    AHBL_helper: have (
+      `MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
+      ##1 
+      `MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBH) && 
+      `MULT.op_a_i == $past(`MULT.op_a_i) && `MULT.op_b_i == $past(`MULT.op_b_i) && 
+      `MULT.signed_mode_i == 2'b00 && 
+      `MULT.div_sel_i == 1'b0 &&
+      `MULT.imd_val_q_i[0] == $past(`MULT.imd_val_d_o[0])
+      ##1
+      `MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.AHBL) && 
+      `MULT.op_a_i == $past(`MULT.op_a_i,2) && `MULT.op_b_i == $past(`MULT.op_b_i,2) && 
+      `MULT.signed_mode_i == 2'b00 && 
+      `MULT.div_sel_i == 1'b0 &&
+      `MULT.imd_val_q_i[0] == $past(`MULT.imd_val_d_o[0])
+      |-> 
+      `MULT.multdiv_result_o[31:0] == $past(alxbspec[31:0]) + {$past(ahxbspec[15:0]),16'b0}
+    )
+    /
+    AHBL: have (
+      `MULT.operator_i == MD_OP_MULL && `MULT.mult_en_i && (`MULTG.mult_state_q == `MULTG.ALBL) 
+      |-> ##(2)
+      `MULT.multdiv_result_o[31:0] == $past(axbspec[31:0],2)
+    )

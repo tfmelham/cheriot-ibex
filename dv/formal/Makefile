@@ -15,7 +15,7 @@ CHERI=../../src
 
 include Sources.mk
 
-PSGEN_SRCS=thm/btype.proof thm/ibex.proof thm/mem.proof thm/riscv.proof thm/dti.proof
+PSGEN_SRCS=thm/btype.proof thm/mtype.proof thm/ibex.proof thm/mem.proof thm/riscv.proof thm/dti.proof
 PSGEN_FLAGS=-root riscv -task
 
 SAIL_EXTRA_SRCS=../spec/main.sail

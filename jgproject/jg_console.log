@@ -1,0 +1,71 @@
+2025-04-10 14:36:49.566981 (234743) main____ INFO    ----------------------------------------
+2025-04-10 14:36:49.567037 (234743) main____ INFO    Jasper version info
+2025-04-10 14:36:49.567045 (234743) main____ INFO      tool      : Jasper 2024.12
+2025-04-10 14:36:49.567053 (234743) main____ INFO      version   : 2024.12p001 64 bits
+2025-04-10 14:36:49.567059 (234743) main____ INFO      build date: 2025.01.28 15:03:14 UTC
+2025-04-10 14:36:49.567065 (234743) main____ INFO    ----------------------------------------
+2025-04-10 14:36:49.567069 (234743) main____ INFO    Runtime info:
+2025-04-10 14:36:49.567075 (234743) main____ INFO      platform  : Linux 6.8.0-57-generic x86_64
+2025-04-10 14:36:49.567084 (234743) main____ INFO      hostname  : tfm2
+2025-04-10 14:36:49.567091 (234743) main____ INFO      pid       : 234743
+2025-04-10 14:36:49.567096 (234743) main____ INFO      arguments : '-style' 'windows' '-allow_unsupported_OS'
+2025-04-10 14:36:49.567103 (234743) main____ INFO      locale    : UTF-8
+2025-04-10 14:36:49.567108 (234743) main____ INFO    ----------------------------------------
+2025-04-10 14:36:49.567113 (234743) main____ INFO    System resource limits info:
+2025-04-10 14:36:49.567120 (234743) main____ INFO      virtual memory: unlimited
+2025-04-10 14:36:49.567126 (234743) main____ INFO      cpu time      : unlimited
+2025-04-10 14:36:49.567135 (234743) main____ INFO      processes     : 1029010
+2025-04-10 14:36:49.567145 (234743) main____ INFO      stack size    : 8388608 B
+2025-04-10 14:36:49.567152 (234743) main____ INFO      core file size: 0 B
+2025-04-10 14:36:49.567158 (234743) main____ INFO      open files    : 1048576
+2025-04-10 14:36:49.567164 (234743) main____ INFO      file size     : unlimited
+2025-04-10 14:36:49.567169 (234743) main____ INFO    ----------------------------------------
+2025-04-10 14:36:49.567174 (234743) main____ INFO    Memory statistics:
+2025-04-10 14:36:49.567180 (234743) main____ INFO      total physical memory  : 263502964 kB
+2025-04-10 14:36:49.567186 (234743) main____ INFO      free physical memory   : 260528536 kB
+2025-04-10 14:36:49.567191 (234743) main____ INFO      committed address space: 2841740 kB
+2025-04-10 14:36:49.567196 (234743) main____ INFO    ----------------------------------------
+2025-04-10 14:36:49.567923 (234743) main____ INFO    Important environment variables:
+2025-04-10 14:36:49.567944 (234743) main____ INFO      CDS_LIC_FILE       : '5280@license.servers.lowrisc.org'
+2025-04-10 14:36:49.567951 (234743) main____ INFO      DISPLAY            : 'localhost:10.0'
+2025-04-10 14:36:49.567957 (234743) main____ INFO      EDITOR             : 'emacs'
+2025-04-10 14:36:49.567962 (234743) main____ INFO      JASPER_CPU_CHECK   : '1'
+2025-04-10 14:36:49.567969 (234743) main____ INFO      JASPER_INSTALL_DIR : '/eda/cadence/installs/jasper_2024.12p001'
+2025-04-10 14:36:49.567974 (234743) main____ INFO      JASPER_KERNEL_CHECK: '1'
+2025-04-10 14:36:49.567980 (234743) main____ INFO      JASPER_OS_CHECK    : '0'
+2025-04-10 14:36:49.567986 (234743) main____ INFO      JASPER_PLATFORM    : 'Linux64'
+2025-04-10 14:36:49.567992 (234743) main____ INFO      LANG               : 'en_GB.UTF-8'
+2025-04-10 14:36:49.567998 (234743) main____ INFO      LM_LIC_FILE        : '5280@license.servers.lowrisc.org'
+2025-04-10 14:36:49.568003 (234743) main____ INFO    ----------------------------------------
+2025-04-10 14:36:49.568079 (234743) lic_core INFO    Initializing license system ...
+2025-04-10 14:36:49.569981 (234752) lic_core INFO    [14:36:49.140761] Configured Lic search path (24.01-s003): 5280@license.servers.lowrisc.org
+2025-04-10 14:36:49.572925 (234743) lic_core INFO    ... license system initialized.
+2025-04-10 14:36:49.573123 (234743) lic__man INFO    Claim 'main' for <ui>.
+2025-04-10 14:36:49.573148 (234743) lic_core INFO    (1) checking out 'jasper_interactive' ...
+2025-04-10 14:36:50.177799 (234743) lic_core INFO    ... (1) checkout failed (error: -5) ("FLEXnet ERROR(-5, 0, 0): No such feature exists.")
+2025-04-10 14:36:50.177847 (234743) lic_core INFO    (2) checking out 'jasper_pint' ...
+2025-04-10 14:36:50.377486 (234743) lic_core INFO    ... (2) checkout succeeded
+2025-04-10 14:36:50.377538 (234743) lic__man INFO    Claim 'fpv' for <ui>.
+2025-04-10 14:36:50.377559 (234743) lic_core INFO    (3) checking out 'jasper_fpv' ...
+2025-04-10 14:36:50.565400 (234743) lic_core INFO    ... (3) checkout failed (error: -5) ("FLEXnet ERROR(-5, 0, 0): No such feature exists.")
+2025-04-10 14:36:50.565435 (234743) lic_core INFO    (4) checking out 'jasper_fao' ...
+2025-04-10 14:36:50.678977 (234743) lic_core INFO    ... (4) checkout failed (error: -5) ("FLEXnet ERROR(-5, 0, 0): No such feature exists.")
+2025-04-10 14:36:50.679008 (234743) lic_core INFO    (5) checking out 'jasper_papp' ...
+2025-04-10 14:36:50.874994 (234743) lic_core INFO    ... (5) checkout succeeded
+2025-04-10 14:36:50.875562 (234743) main____ INFO    Tool inactivity delay is 480000 ms.
+2025-04-10 14:36:51.338928 (234743) lic__man INFO    Claim 'fpv' for <ui>.
+2025-04-10 14:36:51.462900 (234743) lic__man INFO    Unclaim 'fpv' for <ui>.
+2025-04-10 14:36:51.462946 (234743) lic__man INFO    Claim 'fpv' for <ui>.
+2025-04-10 14:36:51.466601 (234743) session_ INFO    Starting analysis session with session id 'session_0' (launcher: <local>) ...
+2025-04-10 14:36:51.473247 (234743) session_ INFO    Analysis session with session id 'session_0' started (pid: 234791)
+2025-04-10 14:36:52.420577 (234743) session_ INFO    Analysis session 'session_0' connected to the console (host: 127.0.0.1:52456)
+2025-04-10 14:36:55.509368 (234743) main____ INFO    About to exit: request to exit with status 0 received from analysis session 'session_0'
+2025-04-10 14:36:55.548023 (234743) session_ INFO    Analysis session 'session_0' disconnected.
+2025-04-10 14:36:55.552454 (234743) lic_core INFO    (2) checkin jasper_pint
+2025-04-10 14:36:55.562180 (234743) lic_core INFO    (5) checkin jasper_papp
+2025-04-10 14:36:55.571962 (234743) lic_core INFO    Lic Summary:
+2025-04-10 14:36:55.571978 (234743) lic_core INFO      [14:36:55.047584] Cdslmd servers:5280@license.servers.lowrisc.org
+2025-04-10 14:36:55.571984 (234743) lic_core INFO      [14:36:55.571882] Feature usage summary:
+2025-04-10 14:36:55.571989 (234743) lic_core INFO      [14:36:55.571883] jasper_pint
+2025-04-10 14:36:55.571994 (234743) lic_core INFO      [14:36:55.571883] jasper_papp
+2025-04-10 14:36:55.572405 (234743) main____ INFO    Exiting with status 0.
