@@ -513,5 +513,6 @@ ibex_compressed_decoder decompression_assertion_decoder_2(
 `undef INSTR
 `define INSTR wbexc_decompressed_instr
 `include "../build/psgen.sv"
+`include "mult.sv"
 
 endmodule

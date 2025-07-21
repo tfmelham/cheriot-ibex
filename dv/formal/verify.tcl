@@ -80,11 +80,11 @@ proc prove_hps {task regex} {
 proc prove_no_liveness {} {
 	assume_mtypes
 
-	set_word_level_engine_flow on
-	prove -property {Step0::top.Mult_ALBL} -engine {WHps WA1}
-	prove -property {Step1::top.Mult_ALBH_helper} -engine {WHPs WA1}
-	prove -property {Step3::top.Mult_AHBL_helper} -engine {WHPs WA1} 
-	set_word_level_engine_flow off
+	# set_word_level_engine_flow on
+	# prove -orchestration off -property {Step0::top.Mult_ALBL} -engine {WHps WA1}           ;# does prove
+	# prove -orchestration off -property {Step1::top.Mult_ALBH_helper} -engine {WHPs WA1}	;# does prove - slowly
+	# prove -property {Step3::top.Mult_AHBL_helper} -engine {WHPs WA1}    ;# does not prove?
+	# set_word_level_engine_flow off
 	
 	prove -task Step0
 
